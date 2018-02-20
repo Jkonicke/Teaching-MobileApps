@@ -5,6 +5,7 @@ using Android.Content;
 using System.Collections.Generic;
 using Android.Content.PM;
 using Android.Provider;
+using System;
 
 namespace GoogleApiExample
 {
@@ -19,10 +20,15 @@ namespace GoogleApiExample
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
+            Button begin = < Button > (Resource.Id.startButton);
+
             if (IsThereAnAppToTakePictures() == true)
             {
                 FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
             }
+
+            string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
+            string find;
         }
 
         /// <summary>
@@ -56,10 +62,13 @@ namespace GoogleApiExample
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
+            SetContentView(Resource.Layout.layout1);
+
             // Display in ImageView. We will resize the bitmap to fit the display.
             // Loading the full sized image will consume too much memory
             // and cause the application to crash.
             ImageView imageView = FindViewById<ImageView>(Resource.Id.takenPictureImageView);
+            ImageView submittedPic = FindViewById<ImageView>(Resource.Id.pictureToCompare);
             int height = Resources.DisplayMetrics.HeightPixels;
             int width = imageView.Height;
 
@@ -122,6 +131,14 @@ namespace GoogleApiExample
 
             // Dispose of the Java side bitmap.
             System.GC.Collect();
+        }
+
+        private void nextItem(Array[] )
+        {
+            Random rand = new Random();
+            int rng = rand.Next(0, 20);
+
+            find = items[rng];
         }
     }
 }
