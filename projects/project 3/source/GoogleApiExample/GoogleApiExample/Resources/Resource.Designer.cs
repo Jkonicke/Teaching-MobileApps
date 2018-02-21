@@ -47,6 +47,9 @@ namespace GoogleApiExample
 			// aapt resource value: 0x7f020000
 			public const int mainBackground = 2130837504;
 			
+			// aapt resource value: 0x7f020001
+			public const int secondaryBackGround = 2130837505;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -61,16 +64,22 @@ namespace GoogleApiExample
 		{
 			
 			// aapt resource value: 0x7f060002
-			public const int launchCameraButton = 2131099650;
+			public const int backButton = 2131099650;
+			
+			// aapt resource value: 0x7f060004
+			public const int launchCameraButton = 2131099652;
 			
 			// aapt resource value: 0x7f060000
 			public const int pictureToCompare = 2131099648;
 			
 			// aapt resource value: 0x7f060003
-			public const int takenPictureImageView = 2131099651;
+			public const int startButton = 2131099651;
 			
-			// aapt resource value: 0x7f060004
-			public const int thingToFind = 2131099652;
+			// aapt resource value: 0x7f060005
+			public const int takenPictureImageView = 2131099653;
+			
+			// aapt resource value: 0x7f060006
+			public const int thingToFind = 2131099654;
 			
 			// aapt resource value: 0x7f060001
 			public const int userInformer = 2131099649;
@@ -93,6 +102,9 @@ namespace GoogleApiExample
 			
 			// aapt resource value: 0x7f040001
 			public const int Main = 2130968577;
+			
+			// aapt resource value: 0x7f040002
+			public const int preperation = 2130968578;
 			
 			static Layout()
 			{

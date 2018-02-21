@@ -12,33 +12,39 @@ namespace GoogleApiExample
     [Activity(Label = "GoogleApiExample", MainLauncher = true, Icon = "@mipmap/icon")]
     public class MainActivity : Activity
     {
+        string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
+        Random rand = new Random();
+        int rng;
+        string find;
+        
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
-            Random rand = new Random();
-            int rng = rand(-1, 19);
-            string find;
-
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            Button begin = FindViewById<Button> (Resource.Id.startButton);
-            ImageView nextpic = FindViewById<ImageView>(Resource.Id.thingToFind);
+            Button begin = FindViewById<Button>(Resource.Id.startButton);
 
-            begin.Click += delegate {
-                find = items[rng];
-                nextpic.Text = string.Format("Try to take a picture of " + find);
-                SetContentView(Resource.Layout.preperation); };
+            rng = rand.Next(0, 19);
+            find = items[rng];
 
-            if (IsThereAnAppToTakePictures() == true)
+            begin.Click += delegate
             {
-                FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
-            }
+                SetContentView(Resource.Layout.preperation);
+                TextView nextpic = FindViewById<TextView>(Resource.Id.thingToFind);
+                nextpic.Text = string.Format("Try to take a picture of " + find);
+                if (IsThereAnAppToTakePictures() == true)
+                {
+                    FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
+                };
+            };
 
+            
         }
+
+        
 
         /// <summary>
         /// Apparently, some android devices do not have a camera.  To guard against this,
@@ -71,8 +77,6 @@ namespace GoogleApiExample
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            SetContentView(Resource.Layout.layout1);
-
             // Display in ImageView. We will resize the bitmap to fit the display.
             // Loading the full sized image will consume too much memory
             // and cause the application to crash.
@@ -81,6 +85,7 @@ namespace GoogleApiExample
             int height = Resources.DisplayMetrics.HeightPixels;
             int width = imageView.Height;
 
+            SetContentView(Resource.Layout.layout1);
             //AC: workaround for not passing actual files
             Android.Graphics.Bitmap bitmap = (Android.Graphics.Bitmap)data.Extras.Get("data");
 
@@ -130,6 +135,12 @@ namespace GoogleApiExample
             //send request.  Note that I'm calling execute() here, but you might want to use
             //ExecuteAsync instead
             var apiResult = client.Images.Annotate(batch).Execute();
+            //this looks at api results confidence is % chance, discription is the actual item itself
+            //apiResult.Responses[0].LabelAnnotations[0].Description;
+
+            Button back = FindViewById<Button>(Resource.Id.startButton);
+            TextView answer = FindViewById<TextView>(Resource.Id.thingToFind);
+
 
             if (bitmap != null)
             {
