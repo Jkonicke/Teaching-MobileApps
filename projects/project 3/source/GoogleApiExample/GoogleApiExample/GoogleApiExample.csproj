@@ -89,7 +89,7 @@
     <AndroidResource Include="Resources\layout\layout1.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\starting.axml">
+    <AndroidResource Include="Resources\layout\preperation.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

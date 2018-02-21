@@ -17,18 +17,27 @@ namespace GoogleApiExample
         {
             base.OnCreate(savedInstanceState);
 
+            string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
+            Random rand = new Random();
+            int rng = rand(-1, 19);
+            string find;
+
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            Button begin = < Button > (Resource.Id.startButton);
+            Button begin = FindViewById<Button> (Resource.Id.startButton);
+            ImageView nextpic = FindViewById<ImageView>(Resource.Id.thingToFind);
+
+            begin.Click += delegate {
+                find = items[rng];
+                nextpic.Text = string.Format("Try to take a picture of " + find);
+                SetContentView(Resource.Layout.preperation); };
 
             if (IsThereAnAppToTakePictures() == true)
             {
                 FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
             }
 
-            string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
-            string find;
         }
 
         /// <summary>
@@ -133,13 +142,6 @@ namespace GoogleApiExample
             System.GC.Collect();
         }
 
-        private void nextItem(Array[] )
-        {
-            Random rand = new Random();
-            int rng = rand.Next(0, 20);
-
-            find = items[rng];
-        }
     }
 }
 
