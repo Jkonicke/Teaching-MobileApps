@@ -135,13 +135,42 @@ namespace GoogleApiExample
             //send request.  Note that I'm calling execute() here, but you might want to use
             //ExecuteAsync instead
             var apiResult = client.Images.Annotate(batch).Execute();
+
             //this looks at api results confidence is % chance, discription is the actual item itself
             //apiResult.Responses[0].LabelAnnotations[0].Description;
 
-            Button back = FindViewById<Button>(Resource.Id.startButton);
-            TextView answer = FindViewById<TextView>(Resource.Id.thingToFind);
+            Button back = FindViewById<Button>(Resource.Id.backButton);
+            TextView answer = FindViewById<TextView>(Resource.Id.userInformer);
+            bool found = false;
 
+            for(int i = 0; i < 10; i++)
+            {
+                if(find == apiResult.Responses[i].LabelAnnotations[i].Description)
+                {
+                    found = true;
+                }
+            }
 
+            if(found == true)
+            {
+                answer.Text = string.Format("Correct that is " + find);
+            }
+            else
+            {
+                answer.Text = string.Format("Sorry but the Api didn't identify your picture as " + find);
+            }
+
+            back.Text = string.Format("Push me to get your next item to find a picture of.");
+
+            back.Click += delegate {
+                SetContentView(Resource.Layout.preperation);
+                TextView nextpic = FindViewById<TextView>(Resource.Id.thingToFind);
+                nextpic.Text = string.Format("Try to take a picture of " + find);
+                if (IsThereAnAppToTakePictures() == true)
+                {
+                    FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
+                };
+            };
             if (bitmap != null)
             {
                 imageView.SetImageBitmap(bitmap);
