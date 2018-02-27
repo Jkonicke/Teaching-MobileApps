@@ -12,11 +12,11 @@ namespace GoogleApiExample
     [Activity(Label = "GoogleApiExample", MainLauncher = true, Icon = "@mipmap/icon")]
     public class MainActivity : Activity
     {
-        string[] items = { "Tree", "Car", "Door", "Flashlight", "Cup", "Shirt", "Shelf", "Book", "Ruler", "Keyboard", "Mouse", "Cat", "Chair", "Pen", "House", "Television", "Bird", "Shoe", "Pencile", "Dog" };
+        string[] items = { "tree", "car", "door", "flashlight", "cup", "shirt", "shelf", "book", "ruler", "keyboard", "mouse", "cat", "chair", "pen", "television", "bird", "shoe", "pencile", "dog", "pattern" };
         Random rand = new Random();
         int rng;
         string find;
-        
+        Android.Graphics.Bitmap bitmap;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,7 +28,7 @@ namespace GoogleApiExample
             Button begin = FindViewById<Button>(Resource.Id.startButton);
 
             rng = rand.Next(0, 19);
-            find = items[rng];
+            find = items[19];
 
             begin.Click += delegate
             {
@@ -77,17 +77,11 @@ namespace GoogleApiExample
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            // Display in ImageView. We will resize the bitmap to fit the display.
-            // Loading the full sized image will consume too much memory
-            // and cause the application to crash.
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.takenPictureImageView);
-            ImageView submittedPic = FindViewById<ImageView>(Resource.Id.pictureToCompare);
-            int height = Resources.DisplayMetrics.HeightPixels;
-            int width = imageView.Height;
-
             SetContentView(Resource.Layout.layout1);
+            ImageView submittedPic = FindViewById<ImageView>(Resource.Id.pictureToCompare);
             //AC: workaround for not passing actual files
-            Android.Graphics.Bitmap bitmap = (Android.Graphics.Bitmap)data.Extras.Get("data");
+            bitmap = (Android.Graphics.Bitmap)data.Extras.Get("data");
+            submittedPic.SetImageBitmap(bitmap);
 
             //convert bitmap into stream to be sent to Google API
             string bitmapString = "";
@@ -142,16 +136,22 @@ namespace GoogleApiExample
             Button back = FindViewById<Button>(Resource.Id.backButton);
             TextView answer = FindViewById<TextView>(Resource.Id.userInformer);
             bool found = false;
+            int count = 0;
 
-            for(int i = 0; i < 10; i++)
+            foreach(var item in apiResult.Responses[0].LabelAnnotations)
             {
-                if(find == apiResult.Responses[i].LabelAnnotations[i].Description)
+                count++;
+                if (find == item.Description)
                 {
                     found = true;
                 }
+                if(count == 10)
+                {
+                    break;
+                }
             }
 
-            if(found == true)
+            if (found == true)
             {
                 answer.Text = string.Format("Correct that is " + find);
             }
@@ -164,19 +164,18 @@ namespace GoogleApiExample
 
             back.Click += delegate {
                 SetContentView(Resource.Layout.preperation);
+                rng = rand.Next(0, 19);
+                find = items[rng];
                 TextView nextpic = FindViewById<TextView>(Resource.Id.thingToFind);
+                ImageView lastPic = FindViewById<ImageView>(Resource.Id.takenPictureImageView);
+                lastPic.SetImageBitmap(bitmap);
                 nextpic.Text = string.Format("Try to take a picture of " + find);
                 if (IsThereAnAppToTakePictures() == true)
                 {
                     FindViewById<Button>(Resource.Id.launchCameraButton).Click += TakePicture;
                 };
             };
-            if (bitmap != null)
-            {
-                imageView.SetImageBitmap(bitmap);
-                imageView.Visibility = Android.Views.ViewStates.Visible;
-                bitmap = null;
-            }
+            
 
             // Dispose of the Java side bitmap.
             System.GC.Collect();
